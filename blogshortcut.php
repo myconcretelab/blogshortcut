@@ -86,6 +86,18 @@ class BlogshortcutPlugin extends Plugin
 
         $blueprint = (string) ($config['blueprint'] ?? 'item');
         $buttonLabel = (string) ($config['button_label'] ?? 'Nouvel article');
+        $parentLabel = $parentRoute !== '' ? $parentRoute : '/';
+        $parentTitle = '';
+
+        if ($parentRoute !== '') {
+            if (isset($this->grav['admin'])) {
+                $this->grav['admin']->enablePages();
+            }
+            $page = $this->grav['pages']->find($parentRoute);
+            if ($page !== null) {
+                $parentTitle = (string) $page->title();
+            }
+        }
 
         $link = $this->getAdminBaseUrl() . '/pages';
 
@@ -94,6 +106,8 @@ class BlogshortcutPlugin extends Plugin
             'parent_route' => $parentRoute,
             'blueprint' => $blueprint,
             'button_label' => $buttonLabel,
+            'parent_label' => $parentLabel,
+            'parent_title' => $parentTitle,
         ];
     }
 
