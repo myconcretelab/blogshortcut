@@ -97,7 +97,7 @@ class BlogshortcutPlugin extends Plugin
 
         $query = http_build_query($params);
 
-        $link = $this->getAdminBaseUrl() . '/pages/add';
+        $link = rtrim($this->grav['uri']->rootUrl(true), '/') . '/admin/pages/add';
         if ($query !== '') {
             $link .= '?' . $query;
         }
@@ -108,18 +108,5 @@ class BlogshortcutPlugin extends Plugin
             'blueprint' => $blueprint,
             'button_label' => $buttonLabel,
         ];
-    }
-
-    private function getAdminBaseUrl(): string
-    {
-        $adminRoute = (string) $this->grav['config']->get('plugins.admin.route', '/admin');
-        $adminRoute = '/' . trim($adminRoute, '/');
-        if ($adminRoute === '/') {
-            $adminRoute = '';
-        }
-
-        $rootUrl = rtrim($this->grav['uri']->rootUrl(true), '/');
-
-        return $rootUrl . $adminRoute;
     }
 }
