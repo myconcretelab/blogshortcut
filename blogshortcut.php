@@ -65,7 +65,7 @@ class BlogshortcutPlugin extends Plugin
         $link = $shortcut['link'];
 
         $nav = $this->grav['twig']->plugins_hooked_nav ?? [];
-        $nav['blogshortcut'] = [
+        $nav[$buttonLabel] = [
             'title' => $buttonLabel,
             'label' => $buttonLabel,
             'icon' => 'fa-plus blogshortcut-icon',
