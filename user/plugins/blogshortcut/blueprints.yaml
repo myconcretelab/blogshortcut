@@ -1,0 +1,43 @@
+title: Blog Shortcut
+description: "Ajoute un bouton pour créer rapidement un nouvel article de blog."
+type: plugin
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin activé
+      highlight: 1
+      default: 1
+      options:
+        1: Oui
+        0: Non
+      validate:
+        type: bool
+    general:
+      type: section
+      title: Paramètres
+      underline: true
+      fields:
+        button_label:
+          type: text
+          label: Libellé du bouton
+          default: 'Nouvel article'
+          help: Texte affiché sur le bouton.
+        parent_route:
+          type: pages
+          label: Page parent du blog
+          show_all: true
+          show_modular: false
+          show_root: true
+          help: Sélectionnez la page parent sous laquelle les nouveaux articles seront créés.
+          validate:
+            type: string
+        blueprint:
+          type: text
+          label: Type de page
+          default: item
+          help: Nom du blueprint utilisé pour la nouvelle page.
+          validate:
+            type: string
