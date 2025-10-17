@@ -31,7 +31,9 @@ class BlogshortcutPlugin extends Plugin
 
     public function onAdminTwigTemplatePaths(): void
     {
-        $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
+        $paths = $this->grav['twig']->twig_paths ?? [];
+        array_unshift($paths, __DIR__ . '/templates');
+        $this->grav['twig']->twig_paths = $paths;
     }
 
     public function onTwigSiteVariables(): void
