@@ -13,7 +13,8 @@
 {% set link = shortcut.link ?? (base_admin_url ~ '/pages') %}
 {% set label = shortcut.button_label ?? 'Nouvel article' %}
 
-{% if authorize(['admin.pages.create', 'admin.super']) and link %}
+{% set permissions = ['admin.pages', 'admin.pages.create', 'admin.super'] %}
+{% if authorize(permissions) and link %}
 <li class="hint--bottom blogshortcut-task" data-hint="{{ label }}">
     <a class="blogshortcut-quick" href="{{ link }}" data-blogshortcut-trigger="1">
         <i class="fa fa-file-text-o"></i>

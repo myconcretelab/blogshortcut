@@ -44,6 +44,20 @@ class BlogshortcutPlugin extends Plugin
         $shortcut = $this->buildShortcutData();
         $this->grav['twig']->twig_vars['blogshortcut'] = $shortcut;
 
+        $buttonLabel = $shortcut['button_label'];
+        $quickTray = $this->grav['twig']->plugins_quick_tray ?? [];
+        $quickTray['blogshortcut'] = [
+            'route' => '/admin/pages',
+            'icon' => 'fa-file-text-o',
+            'hint' => $buttonLabel,
+            'authorize' => ['admin.pages', 'admin.pages.create', 'admin.super'],
+            'class' => 'blogshortcut-task hint--bottom',
+            'data' => [
+                'blogshortcut-trigger' => '1',
+            ],
+        ];
+        $this->grav['twig']->plugins_quick_tray = $quickTray;
+
         $payload = json_encode($shortcut, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
         if ($payload !== false) {
             $assets = $this->grav['assets'];
