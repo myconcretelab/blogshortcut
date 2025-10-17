@@ -1,5 +1,16 @@
 {% set shortcut = blogshortcut ?? {} %}
-{% set link = shortcut.link ?? (uri.rootUrl(true) ~ '/admin/pages/add') %}
+{% set admin_route = config.plugins.admin.route|default('/admin')|trim('/') %}
+{% set admin_path = admin_route ? '/' ~ admin_route : '' %}
+{% set root_url = uri.rootUrl(true)|trim('/', 'right') %}
+{% set base_admin_url = root_url %}
+{% if admin_path %}
+    {% if base_admin_url ends with admin_path %}
+        {% set base_admin_url = base_admin_url %}
+    {% else %}
+        {% set base_admin_url = base_admin_url ~ admin_path %}
+    {% endif %}
+{% endif %}
+{% set link = shortcut.link ?? (base_admin_url ~ '/pages/add') %}
 {% set label = shortcut.button_label ?? 'Nouvel article' %}
 
 <li class="task">
