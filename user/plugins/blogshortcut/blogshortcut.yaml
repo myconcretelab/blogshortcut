@@ -1,0 +1,4 @@
+enabled: true
+button_label: 'Nouvel article'
+parent_route: '/blog'
+blueprint: 'item'

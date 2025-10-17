@@ -1,0 +1,10 @@
+{% set shortcut = blogshortcut ?? {} %}
+{% set link = shortcut.link ?? (uri.rootUrl(true) ~ '/admin/pages/add') %}
+{% set label = shortcut.button_label ?? 'Nouvel article' %}
+
+<li class="task">
+    <a class="button button-primary button-small" href="{{ link }}">
+        <i class="fa fa-plus"></i>
+        <span>{{ label }}</span>
+    </a>
+</li>
