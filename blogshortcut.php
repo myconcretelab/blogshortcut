@@ -2,6 +2,7 @@
 
 namespace Grav\Plugin;
 
+use RocketTheme\Toolbox\Event\Event;
 use Grav\Common\Plugin;
 
 class BlogshortcutPlugin extends Plugin
@@ -27,6 +28,7 @@ class BlogshortcutPlugin extends Plugin
             'onAdminTwigTemplatePaths' => ['onAdminTwigTemplatePaths', 0],
             'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
             'onAdminMenu' => ['onAdminMenu', 0],
+            'onBlueprintCreated' => ['onBlueprintCreated', 0],
         ]);
     }
 
@@ -72,6 +74,40 @@ class BlogshortcutPlugin extends Plugin
             'authorize' => ['admin.pages.create', 'admin.super'],
         ];
         $this->grav['twig']->plugins_hooked_nav = $nav;
+    }
+
+    public function onBlueprintCreated(Event $event): void
+    {
+        $blueprint = $event['blueprint'] ?? null;
+        $type = (string) ($event['type'] ?? '');
+
+        if (!$blueprint) {
+            return;
+        }
+
+        $validTypes = [
+            'admin/pages/new',
+            'flex-objects/pages',
+            'flex-objects/pages/page',
+        ];
+
+        if ($type !== '' && !in_array($type, $validTypes, true)) {
+            return;
+        }
+
+        $shortcut = $this->buildShortcutData();
+        $parentRoute = $shortcut['parent_route'];
+        $blueprintName = $shortcut['blueprint'];
+
+        if ($parentRoute !== '' && $blueprint->get('form/fields/route') !== null) {
+            $blueprint->set('form/fields/route/default', $parentRoute);
+            $blueprint->set('form/fields/route/value', $parentRoute);
+        }
+
+        if ($blueprintName !== '' && $blueprint->get('form/fields/name') !== null) {
+            $blueprint->set('form/fields/name/default', $blueprintName);
+            $blueprint->set('form/fields/name/value', $blueprintName);
+        }
     }
 
     /**
