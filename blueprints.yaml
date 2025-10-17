@@ -38,9 +38,10 @@ form:
           validate:
             type: string
         blueprint:
-          type: text
-          label: Type de page
+          type: select
+          label: Template de page
           default: item
-          help: Nom du blueprint utilisé pour la nouvelle page.
+          help: Sélectionnez le template utilisé pour la nouvelle page.
+          data-options@: '\Grav\Common\Page\Pages::types'
           validate:
             type: string
