@@ -40,20 +40,20 @@ class BlogshortcutPlugin extends Plugin
     public function onTwigSiteVariables(): void
     {
         $shortcut = $this->buildShortcutData();
-        $buttonLabel = $shortcut['button_label'];
-        $link = $shortcut['link'];
-
-        $quickTray = $this->grav['twig']->plugins_quick_tray ?? [];
-        $quickTray[] = [
-            'url' => $link,
-            'label' => $buttonLabel,
-            'icon' => 'fa-plus',
-            'authorize' => ['admin.pages.create', 'admin.super'],
-            'class' => 'button button-primary button-small',
-        ];
-        $this->grav['twig']->plugins_quick_tray = $quickTray;
-
         $this->grav['twig']->twig_vars['blogshortcut'] = $shortcut;
+
+        $payload = json_encode($shortcut, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+        if ($payload !== false) {
+            $assets = $this->grav['assets'];
+            $assets->addInlineJs(
+                'window.GravBlogshortcut = ' . $payload . ';',
+                ['group' => 'bottom', 'loading' => 'defer']
+            );
+            $assets->addJs(
+                'plugin://blogshortcut/admin.min.js',
+                ['group' => 'bottom', 'loading' => 'defer']
+            );
+        }
     }
 
     public function onAdminMenu(): void
@@ -66,9 +66,9 @@ class BlogshortcutPlugin extends Plugin
         $nav['blogshortcut'] = [
             'title' => $buttonLabel,
             'label' => $buttonLabel,
-            'icon' => 'fa-plus',
+            'icon' => 'fa-plus blogshortcut-icon',
             'url' => $link,
-            'route' => 'pages/add',
+            'route' => 'pages',
             'authorize' => ['admin.pages.create', 'admin.super'],
         ];
         $this->grav['twig']->plugins_hooked_nav = $nav;
@@ -87,20 +87,7 @@ class BlogshortcutPlugin extends Plugin
         $blueprint = (string) ($config['blueprint'] ?? 'item');
         $buttonLabel = (string) ($config['button_label'] ?? 'Nouvel article');
 
-        $params = [
-            'blueprint' => $blueprint,
-        ];
-
-        if ($parentRoute !== '') {
-            $params['parent'] = $parentRoute;
-        }
-
-        $query = http_build_query($params);
-
-        $link = $this->getAdminBaseUrl() . '/pages/add';
-        if ($query !== '') {
-            $link .= '?' . $query;
-        }
+        $link = $this->getAdminBaseUrl() . '/pages';
 
         return [
             'link' => $link,

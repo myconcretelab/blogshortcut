@@ -10,12 +10,14 @@
         {% set base_admin_url = base_admin_url ~ admin_path %}
     {% endif %}
 {% endif %}
-{% set link = shortcut.link ?? (base_admin_url ~ '/pages/add') %}
+{% set link = shortcut.link ?? (base_admin_url ~ '/pages') %}
 {% set label = shortcut.button_label ?? 'Nouvel article' %}
 
-<li class="task">
-    <a class="button button-primary button-small" href="{{ link }}">
+{% if authorize(['admin.pages.create', 'admin.super']) and link %}
+<li class="task blogshortcut-task">
+    <a class="button button-primary button-small" href="{{ link }}" data-blogshortcut-trigger="1">
         <i class="fa fa-plus"></i>
         <span>{{ label }}</span>
     </a>
 </li>
+{% endif %}
