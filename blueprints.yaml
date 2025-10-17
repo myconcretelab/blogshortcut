@@ -1,6 +1,9 @@
-title: Blog Shortcut
-description: "Ajoute un bouton pour créer rapidement un nouvel article de blog."
+name: Blog Shortcut
+slug: blogshortcut
 type: plugin
+version: 0.1.0
+description: "Ajoute un bouton pour créer rapidement un nouvel article de blog."
+icon: rocket
 
 form:
   validation: loose
