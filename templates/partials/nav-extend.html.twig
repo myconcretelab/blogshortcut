@@ -14,10 +14,9 @@
 {% set label = shortcut.button_label ?? 'Nouvel article' %}
 
 {% if authorize(['admin.pages.create', 'admin.super']) and link %}
-<li class="task blogshortcut-task">
-    <a class="button button-primary button-small" href="{{ link }}" data-blogshortcut-trigger="1">
-        <i class="fa fa-plus"></i>
-        <span>{{ label }}</span>
+<li class="hint--bottom blogshortcut-task" data-hint="{{ label }}">
+    <a class="blogshortcut-quick" href="{{ link }}" data-blogshortcut-trigger="1">
+        <i class="fa fa-file-text-o"></i>
     </a>
 </li>
 {% endif %}
