@@ -26,6 +26,7 @@ class BlogshortcutPlugin extends Plugin
         $this->enable([
             'onAdminTwigTemplatePaths' => ['onAdminTwigTemplatePaths', 0],
             'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
+            'onAdminMenu' => ['onAdminMenu', 0],
         ]);
     }
 
@@ -37,6 +38,46 @@ class BlogshortcutPlugin extends Plugin
     }
 
     public function onTwigSiteVariables(): void
+    {
+        $shortcut = $this->buildShortcutData();
+        $buttonLabel = $shortcut['button_label'];
+        $link = $shortcut['link'];
+
+        $quickTray = $this->grav['twig']->plugins_quick_tray ?? [];
+        $quickTray[] = [
+            'url' => $link,
+            'label' => $buttonLabel,
+            'icon' => 'fa-plus',
+            'authorize' => ['admin.pages.create', 'admin.super'],
+            'class' => 'button button-primary button-small',
+        ];
+        $this->grav['twig']->plugins_quick_tray = $quickTray;
+
+        $this->grav['twig']->twig_vars['blogshortcut'] = $shortcut;
+    }
+
+    public function onAdminMenu(): void
+    {
+        $shortcut = $this->buildShortcutData();
+        $buttonLabel = $shortcut['button_label'];
+        $link = $shortcut['link'];
+
+        $nav = $this->grav['twig']->plugins_hooked_nav ?? [];
+        $nav['blogshortcut'] = [
+            'title' => $buttonLabel,
+            'label' => $buttonLabel,
+            'icon' => 'fa-plus',
+            'url' => $link,
+            'route' => 'pages/add',
+            'authorize' => ['admin.pages.create', 'admin.super'],
+        ];
+        $this->grav['twig']->plugins_hooked_nav = $nav;
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private function buildShortcutData(): array
     {
         $config = (array) $this->config->get('plugins.blogshortcut', []);
 
@@ -61,7 +102,7 @@ class BlogshortcutPlugin extends Plugin
             $link .= '?' . $query;
         }
 
-        $this->grav['twig']->twig_vars['blogshortcut'] = [
+        return [
             'link' => $link,
             'parent_route' => $parentRoute,
             'blueprint' => $blueprint,
