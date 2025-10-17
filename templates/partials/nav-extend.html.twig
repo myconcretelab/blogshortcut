@@ -1,5 +1,8 @@
 {% set shortcut = blogshortcut ?? {} %}
-{% set link = shortcut.link ?? (uri.rootUrl(true) ~ '/admin/pages/add') %}
+{% set admin_route = config.plugins.admin.route|default('/admin')|trim('/') %}
+{% set admin_path = admin_route ? '/' ~ admin_route : '' %}
+{% set root_url = uri.rootUrl(true)|trim('/', 'right') %}
+{% set link = shortcut.link ?? (root_url ~ admin_path ~ '/pages/add') %}
 {% set label = shortcut.button_label ?? 'Nouvel article' %}
 
 <li class="task">
