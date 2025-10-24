@@ -45,3 +45,14 @@ form:
           data-options@: '\Grav\Common\Page\Pages::types'
           validate:
             type: string
+        prefix_date_slug:
+          type: toggle
+          label: Préfixer le dossier avec la date
+          help: Ajoute automatiquement la date du jour au slug lors de l'enregistrement.
+          highlight: 1
+          default: 0
+          options:
+            1: Oui
+            0: Non
+          validate:
+            type: bool
