@@ -10,3 +10,7 @@ Mini plugin Grav ajoutant un bouton **Nouvel article** dans l'administration (y 
 3. Dans la configuration du plugin (fichier `user/config/plugins/blogshortcut.yaml` ou interface admin), définissez l'identifiant de la page parent `blog_route` si celui par défaut ne correspond pas à votre installation.
 
 Une fois le plugin actif, le bouton **Nouvel article** apparaît dans la barre supérieure de l'administration et redirige directement vers la création d'un nouvel article sous la page blog choisie.
+
+## Options supplémentaires
+
+- `prefix_date_slug`: lorsqu'il est activé, le dossier de la page créée est automatiquement préfixé par la date du jour (au format `YYYY-MM-DD-`). Cela garantit des slugs uniques tout en conservant le titre de la page inchangé.

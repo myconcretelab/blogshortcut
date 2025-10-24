@@ -2,8 +2,12 @@
 
 namespace Grav\Plugin;
 
+use DateTime;
+use DateTimeZone;
 use RocketTheme\Toolbox\Event\Event;
+use Grav\Common\Page\Interfaces\PageInterface;
 use Grav\Common\Plugin;
+use Throwable;
 
 class BlogshortcutPlugin extends Plugin
 {
@@ -29,7 +33,58 @@ class BlogshortcutPlugin extends Plugin
             'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
             'onAdminMenu' => ['onAdminMenu', 0],
             'onBlueprintCreated' => ['onBlueprintCreated', 0],
+            'onAdminSave' => ['onAdminSave', 0],
         ]);
+    }
+
+    public function onAdminSave(Event $event): void
+    {
+        if (!$this->config->get('plugins.blogshortcut.prefix_date_slug', false)) {
+            return;
+        }
+
+        $object = $event['object'] ?? null;
+
+        if (!$object instanceof PageInterface) {
+            return;
+        }
+
+        $folder = (string) $object->folder();
+
+        if ($folder === '' || preg_match('/^\d{4}-\d{2}-\d{2}-/', $folder) === 1) {
+            return;
+        }
+
+        $timezone = (string) $this->grav['config']->get('system.timezone');
+        $date = null;
+
+        if ($timezone !== '') {
+            try {
+                $timezoneObject = new DateTimeZone($timezone);
+                $date = new DateTime('now', $timezoneObject);
+            } catch (Throwable $e) {
+                $date = null;
+            }
+        }
+
+        if ($date === null) {
+            $date = new DateTime();
+        }
+        $prefix = $date->format('Y-m-d');
+
+        $newFolder = $prefix . '-' . $folder;
+        $object->folder($newFolder);
+
+        $slug = (string) $object->slug();
+
+        if ($slug === '' || $slug === $folder) {
+            $object->slug($newFolder);
+            return;
+        }
+
+        if (preg_match('/^\d{4}-\d{2}-\d{2}-/', $slug) !== 1) {
+            $object->slug($prefix . '-' . $slug);
+        }
     }
 
     public function onAdminTwigTemplatePaths(): void
